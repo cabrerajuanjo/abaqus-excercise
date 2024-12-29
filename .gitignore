@@ -6,12 +6,8 @@ __pycache__
 db.sqlite3
 media
 
-
 # File-based project format
 *.iws
-
-
-
 
 # Distribution / packaging 
 .Python build/ 
@@ -63,3 +59,6 @@ celerybeat-schedule.*
 
 # mypy 
 .mypy_cache/ 
+
+# custom
+local/
