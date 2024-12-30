@@ -1,4 +1,5 @@
 import os
+from django.db import transaction
 import pandas
 from portfolio.models.models import Asset, Price, Portfolio, Weight
 
@@ -65,7 +66,20 @@ def get_normalized_prices(portfolio_prices_sheet: pandas.DataFrame, assets, asse
 
     return prices 
 
+def transaction_save(asset_entities, portfolio_entities, weight_entities, price_entities):
+    for asset in asset_entities:
+        asset.save()
+        
+    for portfolio in portfolio_entities:
+        portfolio.save()
 
+    for weight in weight_entities:
+        weight.save()
+
+    for price in price_entities:
+        price.save()
+
+@transaction.atomic
 def etl():
     file_path = os.environ['FILE_PATH_PORTFOLIO_DATA']
     WEIGHTS_SHEET_NAME = 'weights'
@@ -84,16 +98,6 @@ def etl():
     weights_entities = get_normalized_weights(portfolio_weights_sheet, portfolios, portfolio_entities, asset_entities)
     prices_entities = get_normalized_prices(portfolio_prices_sheet, assets, asset_entities)
 
-    for asset in asset_entities.values():
-        asset.save()
-        
-    for portfolio in portfolio_entities.values():
-        portfolio.save()
-
-    for weight in weights_entities:
-        weight.save()
-
-    for price in prices_entities:
-        price.save()
+    transaction_save(asset_entities.values(), portfolio_entities.values(), weights_entities, prices_entities)
 
     return assets
