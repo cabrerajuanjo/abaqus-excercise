@@ -1,11 +1,15 @@
 import os
 from django.db import transaction
 import pandas
-from portfolio.models.models import Asset, Price, Portfolio, Weight
+from portfolio.models.models import Asset, Price, Portfolio, Weight, Quantity
 
 DATE_PRICE_COLUMN = 'Dates'
 DATE_WEIGHT_COLUMN = 'Fecha'
 ASSET_WEIGHT_COLUMN = 'activos'
+
+WEIGHTS_SHEET_NAME = 'weights'
+PRICES_SHEET_NAME = 'Precios'
+
 
 def get_portfolios(portfolio_weights_sheet: pandas.DataFrame) -> set[str]:
 
@@ -19,7 +23,10 @@ def get_portfolios(portfolio_weights_sheet: pandas.DataFrame) -> set[str]:
     return portfolios
 
 
-def get_assets(portfolio_weights_sheet: pandas.DataFrame, portfolio_prices_sheet: pandas.DataFrame) -> set[str]:
+def get_assets(
+    portfolio_weights_sheet: pandas.DataFrame,
+    portfolio_prices_sheet: pandas.DataFrame,
+) -> set[str]:
     COLUMNS_TO_IGNORE_IN_PRICES_SHEET = (DATE_PRICE_COLUMN)
     WEIGHTS_SHEET_ASSET_COLUMN_NAME = ASSET_WEIGHT_COLUMN
     assets: set[str] = set([])
@@ -49,32 +56,86 @@ def get_portfolio_entities(portfolios: set[str]) -> dict[str, Portfolio]:
     return portfolio_entities
 
 
-def get_normalized_weights(portfolio_weights_sheet: pandas.DataFrame, portfolios: set[str], portfolio_entities: dict[str, Portfolio], asset_entities: dict[str, Asset]) -> list[Weight]:
-    portfolio_weights_sheet_as_dict = portfolio_weights_sheet.to_dict('records')
+def get_normalized_weights(
+    portfolio_weights_sheet: pandas.DataFrame,
+    portfolios: set[str],
+    portfolio_entities: dict[str, Portfolio],
+    asset_entities: dict[str, Asset],
+) -> list[Weight]:
+    portfolio_weights_sheet_as_dict = portfolio_weights_sheet.to_dict(
+        'records')
     weights: list[Weight] = []
     for weight_row in portfolio_weights_sheet_as_dict:
         for portfolio in portfolios:
-            weight_entity = Weight(date=weight_row[DATE_WEIGHT_COLUMN], asset=asset_entities[weight_row[ASSET_WEIGHT_COLUMN]], portfolio=portfolio_entities[portfolio], weight=weight_row[portfolio])
+            weight_entity = Weight(
+                date=weight_row[DATE_WEIGHT_COLUMN],
+                asset=asset_entities[weight_row[ASSET_WEIGHT_COLUMN]],
+                portfolio=portfolio_entities[portfolio],
+                weight=weight_row[portfolio]
+            )
             weights.append(weight_entity)
 
     return weights
 
 
-def get_normalized_prices(portfolio_prices_sheet: pandas.DataFrame, assets: set[str], asset_entities: dict[str, Asset]) -> list[Price]:
+def get_normalized_prices(
+    portfolio_prices_sheet: pandas.DataFrame,
+    assets: set[str],
+    asset_entities: dict[str, Asset],
+) -> list[Price]:
     portfolio_prices_sheet_as_dict = portfolio_prices_sheet.to_dict('records')
     prices: list[Price] = []
     for price_row in portfolio_prices_sheet_as_dict:
         for asset in assets:
-            price_entity = Price(date=price_row[DATE_PRICE_COLUMN], asset=asset_entities[asset], price=price_row[asset])
+            price_entity = Price(
+                date=price_row[DATE_PRICE_COLUMN],
+                asset=asset_entities[asset],
+                price=price_row[asset]
+            )
             prices.append(price_entity)
 
-    return prices 
+    return prices
 
 
-def transaction_save(asset_entities: list[Asset], portfolio_entities: list[Portfolio], weight_entities: list[Weight], price_entities: list[Price]):
+def get_initial_quantities(
+    initial_value: float,
+    initial_date: str,
+    assets_entities: list[Asset],
+    portfolios_entities: list[Portfolio],
+    weights_entities: list[Weight],
+    prices_entities: list[Price],
+) -> list[Quantity]:
+    quantities: list[Quantity] = []
+    for weight in weights_entities:
+        initial_price_for_asset = next(
+            price for price in prices_entities
+            if str(price.date.date()) == initial_date and
+            price.asset.name == weight.asset.name
+        )
+        initial_quantity = (initial_value*weight.weight) / \
+            initial_price_for_asset.price
+        quantities.append(
+            Quantity(
+                date=weight.date,
+                asset=weight.asset,
+                portfolio=weight.portfolio,
+                quantity=initial_quantity
+            )
+        )
+
+    return quantities
+
+
+def transaction_save(
+    asset_entities: list[Asset],
+    portfolio_entities: list[Portfolio],
+    weight_entities: list[Weight],
+    price_entities: list[Price],
+    quantities_entities: list[Quantity],
+):
     for asset in asset_entities:
         asset.save()
-        
+
     for portfolio in portfolio_entities:
         portfolio.save()
 
@@ -84,12 +145,13 @@ def transaction_save(asset_entities: list[Asset], portfolio_entities: list[Portf
     for price in price_entities:
         price.save()
 
+    for quantity in quantities_entities:
+        quantity.save()
+
 
 @transaction.atomic
-def etl():
+def execute():
     file_path = os.environ['FILE_PATH_PORTFOLIO_DATA']
-    WEIGHTS_SHEET_NAME = 'weights'
-    PRICES_SHEET_NAME = 'Precios'
     portfolio_weights_sheet = pandas.read_excel(file_path, WEIGHTS_SHEET_NAME)
     portfolio_prices_sheet = pandas.read_excel(file_path, PRICES_SHEET_NAME)
 
@@ -97,11 +159,34 @@ def etl():
     portfolios = get_portfolios(portfolio_weights_sheet)
 
     asset_entities: dict[str, Asset] = get_assets_entities(assets)
-    portfolio_entities: dict[str, Portfolio] = get_portfolio_entities(portfolios)
+    portfolio_entities: dict[str, Portfolio] = get_portfolio_entities(
+        portfolios
+    )
+    weights_entities = get_normalized_weights(
+        portfolio_weights_sheet,
+        portfolios,
+        portfolio_entities,
+        asset_entities
+    )
+    prices_entities = get_normalized_prices(
+        portfolio_prices_sheet,
+        assets,
+        asset_entities
+    )
 
-    weights_entities = get_normalized_weights(portfolio_weights_sheet, portfolios, portfolio_entities, asset_entities)
-    prices_entities = get_normalized_prices(portfolio_prices_sheet, assets, asset_entities)
+    quantities_entities = get_initial_quantities(
+        1000000000,
+        '2022-02-15',
+        list(asset_entities.values()),
+        list(portfolio_entities.values()),
+        weights_entities, prices_entities)
 
-    transaction_save(list(asset_entities.values()), list(portfolio_entities.values()), weights_entities, prices_entities)
+    transaction_save(
+        list(asset_entities.values()),
+        list(portfolio_entities.values()),
+        weights_entities,
+        prices_entities,
+        quantities_entities
+    )
 
     return assets

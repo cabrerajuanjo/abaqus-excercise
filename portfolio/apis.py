@@ -18,8 +18,8 @@ class PortfolioData(APIView):
     #     email = serializers.CharField()
 
     def get(self, request):
-        data = extract_transform_load.etl()
+        extract_transform_load.execute()
 
         # data = self.OutputSerializer(data).data
 
-        return Response(data)
+        return Response("data")
