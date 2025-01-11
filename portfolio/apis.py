@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import serializers
-from portfolio.models.models import Weight
+from portfolio.models.models import Weight, Amount
 
 from api.pagination import (
     LimitOffsetPagination,
@@ -19,11 +19,16 @@ class PortfolioData(APIView):
     #     email = serializers.portcwwolio.apiCharField()
 
     class Pagination(LimitOffsetPagination):
-        default_limit = 1
+        default_limit = 10
 
     class InputSerializer(serializers.Serializer):
         date__lt = serializers.DateField(required=False)
-        date__gt= serializers.DateField(required=False)
+        date__gt = serializers.DateField(required=False)
+
+    class OutputSerializerAmount(serializers.ModelSerializer):
+        class Meta:
+            model = Amount
+            fields = ("date", "amount", "portfolio", "asset")
 
     class OutputSerializer(serializers.ModelSerializer):
         class Meta:
@@ -38,7 +43,7 @@ class PortfolioData(APIView):
         result = weight.get(filters=serializer.validated_data)
         return get_paginated_response(
             pagination_class=self.Pagination,
-            serializer_class=self.OutputSerializer,
+            serializer_class=self.OutputSerializerAmount,
             queryset=result,
             request=request,
             view=self,
