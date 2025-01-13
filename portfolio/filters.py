@@ -1,5 +1,4 @@
 import django_filters
-
 from portfolio.models.models import Weight
 
 
