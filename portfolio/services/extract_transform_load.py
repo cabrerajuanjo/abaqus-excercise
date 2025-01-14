@@ -105,7 +105,6 @@ def get_normalized_weights(
         SPREAD_SHEET_ASSET_WEIGHT_COLUMN: ASSET_COLUMN_NAME,
         SPREAD_SHEET_DATE_WEIGHT_COLUMN: DATE_COLUMN_NAME
     })
-    print(normalized_weights.to_string())
 
     return normalized_weights
 
@@ -120,7 +119,6 @@ def get_normalized_prices(
         var_name=ASSET_COLUMN_NAME,
         value_name=PRICE_COLUMN_NAME
     ).rename(columns={SPREAD_SHEET_DATE_PRICE_COLUMN: DATE_COLUMN_NAME})
-    print(normalized_prices)
 
     return normalized_prices
 
@@ -131,7 +129,9 @@ def get_quantities(
     prices_dataframe: pandas.DataFrame,
     weights_dataframe: pandas.DataFrame,
 ) -> pandas.DataFrame:
-    quantities_dataframe = prices_dataframe[prices_dataframe[DATE_COLUMN_NAME] == initial_date].join(
+    quantities_dataframe = prices_dataframe[
+        prices_dataframe[DATE_COLUMN_NAME] == initial_date
+    ].join(
         weights_dataframe.set_index(ASSET_COLUMN_NAME).drop(
             columns=(DATE_COLUMN_NAME)
         ), on=ASSET_COLUMN_NAME
@@ -140,7 +140,6 @@ def get_quantities(
     quantities_dataframe[QUANTITY_COLUMN_NAME] = (
         initial_value*quantities_dataframe.weight)/quantities_dataframe.price
 
-    print(quantities_dataframe)
     return quantities_dataframe
 
     # initial_quantities: list[Quantity] = []
@@ -167,12 +166,12 @@ def get_amounts(
     prices_dataframe: pandas.DataFrame,
     quantity_dataframe: pandas.DataFrame,
 ) -> pandas.DataFrame:
+    # TODO: calculate amouts here
     amounts = prices_dataframe.merge(
         quantity_dataframe.drop(
             columns=[DATE_COLUMN_NAME, PRICE_COLUMN_NAME]
         ), right_on=[ASSET_COLUMN_NAME], left_on=[ASSET_COLUMN_NAME]
     )
-    print(amounts)
     return amounts
 
 
@@ -271,6 +270,7 @@ def execute():
         assets,
     )
 
+    # TODO: substitute inital date by dates[0] and think of what to do with V0
     quantities_dataframe = get_quantities(
         1000000000,
         '2022-02-15',
@@ -295,15 +295,12 @@ def execute():
         amounts_dataframe,
     )
 
-    # print("quantities", quantities_entities)
-
     transaction_save(
         list(asset_entities.values()),
         list(portfolio_entities.values()),
         list(dates_entities.values()),
         price_entities,
         amount_entities,
-
     )
 
     return assets
