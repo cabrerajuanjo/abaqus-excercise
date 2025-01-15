@@ -246,10 +246,11 @@ def transaction_save(
 
 
 @transaction.atomic()
-def execute():
-    file_path = os.environ['FILE_PATH_PORTFOLIO_DATA']
-    portfolio_weights_sheet = pandas.read_excel(file_path, WEIGHTS_SHEET_NAME)
-    portfolio_prices_sheet = pandas.read_excel(file_path, PRICES_SHEET_NAME)
+def execute(file, initial_total):
+    # file_path = os.environ['FILE_PATH_PORTFOLIO_DATA']
+    # file = file_path
+    portfolio_weights_sheet = pandas.read_excel(file, WEIGHTS_SHEET_NAME)
+    portfolio_prices_sheet = pandas.read_excel(file, PRICES_SHEET_NAME)
 
     assets = get_assets(portfolio_weights_sheet, portfolio_prices_sheet)
     portfolios = get_portfolios(portfolio_weights_sheet)
@@ -270,10 +271,9 @@ def execute():
         assets,
     )
 
-    # TODO: substitute inital date by dates[0] and think of what to do with V0
     quantities_dataframe = get_quantities(
-        1000000000,
-        '2022-02-15',
+        initial_total,
+        str(dates[0]),
         prices_dataframe,
         weights_dataframe
     )

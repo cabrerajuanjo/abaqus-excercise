@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import serializers
@@ -48,8 +49,23 @@ class PortfolioTotal(APIView):
 
 
 class PortfolioLoadData(APIView):
-    def post(self, request: Request):
-        data = extract_transform_load.execute()
+    parser_classes = (MultiPartParser, FormParser,)
+
+    class InputSerializer(serializers.Serializer):
+        file = serializers.FileField()
+        initial_total = serializers.FloatField()
+
+    def post(self, request: Request, format=None):
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        my_file = request.FILES['file']
+        print(my_file)
+        print(serializer.validated_data['initial_total'])
+
+        data = extract_transform_load.execute(
+            my_file, serializer.validated_data['initial_total']
+        )
         return Response(data)
 
 
