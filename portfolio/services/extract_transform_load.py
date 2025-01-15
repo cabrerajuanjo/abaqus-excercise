@@ -1,12 +1,10 @@
 import os
 from django.db import transaction
 import pandas
-from portfolio.models.models import (
+from portfolio.models import (
     Asset,
     Price,
     Portfolio,
-    Weight,
-    Quantity,
     Date,
     Amount
 )
@@ -142,25 +140,6 @@ def get_quantities(
 
     return quantities_dataframe
 
-    # initial_quantities: list[Quantity] = []
-    # for weight in weights_entities:
-    #     initial_price_for_asset = next(
-    #         price for price in prices_entities
-    #         if str(price.date.date) == initial_date and
-    #         price.asset.name == weight.asset.name
-    #     )
-    #     initial_quantity = (initial_value*weight.weight) / \
-    #         initial_price_for_asset.price
-    #     initial_quantities.append(
-    #         Quantity(
-    #             date=weight.date,
-    #             asset=weight.asset,
-    #             portfolio=weight.portfolio,
-    #             quantity=initial_quantity
-    #         )
-    #     )
-    #
-
 
 def get_amounts(
     prices_dataframe: pandas.DataFrame,
@@ -232,17 +211,11 @@ def transaction_save(
     for portfolio in portfolio_entities:
         portfolio.save()
 
-    # for weight in weight_entities:
-    #     weight.save()
-
     for price in price_entities:
         price.save()
 
     for amount in amount_entities:
         amount.save()
-
-    # for quantity in quantities_entities:
-    #     quantity.save()
 
 
 @transaction.atomic()
@@ -270,7 +243,6 @@ def execute(file, initial_total):
         portfolio_prices_sheet,
         assets,
     )
-
     quantities_dataframe = get_quantities(
         initial_total,
         str(dates[0]),

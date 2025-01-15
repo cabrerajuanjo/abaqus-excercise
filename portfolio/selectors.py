@@ -1,5 +1,5 @@
 import pandas
-from portfolio.models.models import Amount
+from portfolio.models import Amount
 
 
 def getWeights(*, filters=None):
@@ -11,6 +11,9 @@ def getWeights(*, filters=None):
             filters['date__lt']
         )
     )
+
+    if (not len(amounts)):
+        return
 
     amounts_dataframe = pandas.DataFrame(
         amounts.values(
@@ -46,6 +49,9 @@ def getTotals(*, filters=None):
             filters['date__lt']
         )
     )
+
+    if (not len(amounts)):
+        return
 
     amounts_dataframe = pandas.DataFrame(amounts.values(
         'date__date', 'portfolio__name', 'amount', 'asset__name')

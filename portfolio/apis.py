@@ -4,7 +4,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import serializers
 import portfolio.selectors as selectors
-from portfolio.services import extract_transform_load, update_amounts
+from portfolio.services import extract_transform_load, transact
 
 
 class PortfolioWeight(APIView):
@@ -60,8 +60,6 @@ class PortfolioLoadData(APIView):
         serializer.is_valid(raise_exception=True)
 
         my_file = request.FILES['file']
-        print(my_file)
-        print(serializer.validated_data['initial_total'])
 
         data = extract_transform_load.execute(
             my_file, serializer.validated_data['initial_total']
@@ -81,8 +79,7 @@ class PortfolioTransact(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        print("validated data", serializer.validated_data)
-        data = update_amounts.execute(
+        data = transact.execute(
             date=serializer.validated_data['date'],
             portfolio=serializer.validated_data['portfolio'],
             asset=serializer.validated_data['asset'],

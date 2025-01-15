@@ -33,26 +33,6 @@ class Price(models.Model):
     price = models.FloatField()
 
 
-class Weight(models.Model):
-    class Meta:
-        unique_together = (('id', 'date', 'asset', 'portfolio'),)
-
-    date = models.ForeignKey(Date, on_delete=models.DO_NOTHING)
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
-    weight = models.FloatField()
-
-
-class Quantity(models.Model):
-    class Meta:
-        unique_together = (('id', 'date', 'asset', 'portfolio'),)
-
-    date = models.ForeignKey(Date, on_delete=models.DO_NOTHING)
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
-    quantity = models.FloatField()
-
-
 class Amount(models.Model):
     class Meta:
         unique_together = (('id', 'date', 'asset', 'portfolio'),)

@@ -1,5 +1,5 @@
 import django_filters
-from portfolio.models.models import Weight
+from portfolio.models import Weight
 
 
 class WeightFilter(django_filters.FilterSet):
