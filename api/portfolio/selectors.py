@@ -1,5 +1,5 @@
 import pandas
-from portfolio.models import Amount
+from portfolio.models import Amount, Portfolio, Asset, Date
 
 
 def getWeights(*, filters=None):
@@ -68,3 +68,14 @@ def getTotals(*, filters=None):
     ).sum().rename(columns={'amount': 'total_amount'})
 
     return total_portfolio_value_t.to_dict('records')
+
+
+def portfolios():
+    return Portfolio.objects.all()
+
+
+def assets():
+    return Asset.objects.all()
+
+def dates():
+    return Date.objects.all()

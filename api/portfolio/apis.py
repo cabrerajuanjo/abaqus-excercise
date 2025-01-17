@@ -3,6 +3,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import serializers
+from portfolio.models import Asset, Portfolio, Date
 import portfolio.selectors as selectors
 from portfolio.services import extract_transform_load, transact, reset
 
@@ -95,3 +96,48 @@ class PortfolioReset(APIView):
         reset.execute()
 
         return Response(status=200)
+
+
+class PortfolioPortfolios(APIView):
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Portfolio
+            fields = ["name"]
+
+        def to_representation(self, instance):
+            return instance.name
+
+    def get(self, request: Request):
+        result = selectors.portfolios()
+        print(result)
+
+        return Response(self.OutputSerializer(result, many=True).data)
+
+
+class PortfolioAssets(APIView):
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Asset
+            fields = ["name"]
+
+        def to_representation(self, instance):
+            return instance.name
+
+    def get(self, request: Request):
+        result = selectors.assets()
+
+        return Response(self.OutputSerializer(result, many=True).data)
+
+class PortfolioDates(APIView):
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Date
+            fields = ["date"]
+
+        def to_representation(self, instance):
+            return instance.date
+
+    def get(self, request: Request):
+        result = selectors.dates()
+
+        return Response(self.OutputSerializer(result, many=True).data)
