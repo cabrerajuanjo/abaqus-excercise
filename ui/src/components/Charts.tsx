@@ -36,68 +36,71 @@ const PortfolioDashboard: React.FC = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen w-full">
-            <h1 className="text-3xl font-bold mb-6 text-center">Portfolio Dashboard</h1>
-            <div className="mb-8 bg-white shadow-md rounded-lg p-6">
+        <div className="p-6 from-blue-900 to-gray-900 min-h-screen w-full">
+            <div className="mb-8 bg-gradient-to-br from-blue-800 to-gray-800 shadow-lg rounded-lg p-8 max-w-96     mx-auto">
                 <form
-                    className="flex flex-col space-y-4"
+                    className="space-y-6"
                     onSubmit={(e) => {
                         e.preventDefault();
                         handleFetchData();
                     }}
                 >
-                    <label className="flex flex-col">
-                        <span className="font-medium text-gray-700">Start Date:</span>
+                    <div>
+                        <label className="block text-gray-300 font-medium mb-2" htmlFor="dateGt">
+                            Fecha de Inicio:
+                        </label>
                         <input
-                            className="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                            type="date"
+                            id="dateGt"
                             name="dateGt"
+                            type="date"
                             value={dateRange.dateGt}
                             onChange={handleDateChange}
+                            className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         />
-                    </label>
-                    <label className="flex flex-col">
-                        <span className="font-medium text-gray-700">End Date:</span>
+                    </div>
+                    <div>
+                        <label className="block text-gray-300 font-medium mb-2" htmlFor="dateLt">
+                            Fecha de Fin:
+                        </label>
                         <input
-                            className="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                            type="date"
+                            id="dateLt"
                             name="dateLt"
+                            type="date"
                             value={dateRange.dateLt}
                             onChange={handleDateChange}
+                            className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         />
-                    </label>
-                    <button
-                        className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-                        type="submit"
-                    >
-                        Fetch Data
-                    </button>
+                    </div>
                 </form>
             </div>
-            <div className="mb-8 w-full">
+            <div className="min-w-full mx-auto">
                 <div className="flex space-x-4 mb-6">
                     <button
-                        className={`py-2 px-4 rounded-lg font-medium ${activeTab === "totals" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                        className={`w-1/2 py-3 rounded-lg font-medium text-sm ${activeTab === "totals"
+                                ? "bg-blue-600"
+                                : "bg-gray-200 text-gray-700"
                             }`}
                         onClick={() => setActiveTab("totals")}
                     >
-                        Totals Chart
+                        Gráfica Totales
                     </button>
                     <button
-                        className={`py-2 px-4 rounded-lg font-medium ${activeTab === "weights" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                        className={`w-1/2 py-3 rounded-lg font-medium text-sm ${activeTab === "weights"
+                                ? "bg-blue-600"
+                                : "bg-gray-200 text-gray-700"
                             }`}
                         onClick={() => setActiveTab("weights")}
                     >
-                        Weights Chart
+                        Gráfica Pesos
                     </button>
                 </div>
                 {activeTab === "totals" && (
-                    <div className="bg-white shadow-md rounded-lg p-6">
+                    <div className="bg-gradient-to-br from-gray-700 to-gray-900 shadow-lg rounded-lg p-6">
                         <TotalsChart dateRange={dateRange} fetchTrigger={fetchTrigger} />
                     </div>
                 )}
                 {activeTab === "weights" && (
-                    <div className="bg-white shadow-md rounded-lg p-6">
+                    <div className="bg-gradient-to-br from-gray-700 to-gray-900 shadow-lg rounded-lg p-6">
                         <WeightsChart dateRange={dateRange} fetchTrigger={fetchTrigger} />
                     </div>
                 )}

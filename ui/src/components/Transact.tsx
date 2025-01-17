@@ -60,10 +60,11 @@ const Transaction: React.FC = () => {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-4 w-1/2">
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="shadow-md rounded-lg p-8 space-y-3 w-full max-w-md mx-auto bg-gradient-to-br from-blue-900 to-gray-800">
+            <h2 className="text-2xl font-bold text-white text-center">Registrar Transacción</h2>
+            <form onSubmit={handleSubmit} className="space-y-2">
                 <div>
-                    <label htmlFor="date" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="date" className="block text-gray-300 font-medium mb-2">
                         Fecha:
                     </label>
                     <input
@@ -72,13 +73,13 @@ const Transaction: React.FC = () => {
                         name="date"
                         value={formData.date}
                         onChange={handleInputChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         required
                     />
                 </div>
 
                 <div>
-                    <label htmlFor="portfolio" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="portfolio" className="block text-gray-300 font-medium mb-2">
                         Portafolio:
                     </label>
                     <select
@@ -86,15 +87,22 @@ const Transaction: React.FC = () => {
                         name="portfolio"
                         value={formData.portfolio}
                         onChange={handleInputChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required>
-                        <option selected disabled value=""> -- Seleccionar -- </option>
-                        {portfolios.map((portfolio) => <option key={portfolio} value={portfolio}>{portfolio}</option>)}
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                        required
+                    >
+                        <option selected disabled value="">
+                            -- Seleccionar --
+                        </option>
+                        {portfolios.map((portfolio) => (
+                            <option key={portfolio} value={portfolio}>
+                                {portfolio}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
                 <div>
-                    <label htmlFor="asset" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="asset" className="block text-gray-300 font-medium mb-2">
                         Activo:
                     </label>
                     <select
@@ -102,15 +110,22 @@ const Transaction: React.FC = () => {
                         name="asset"
                         value={formData.asset}
                         onChange={handleInputChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required>
-                        <option disabled selected value=""> -- Seleccionar -- </option>
-                        {assets.map((asset) => <option key={asset} value={asset}>{asset}</option>)}
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                        required
+                    >
+                        <option disabled selected value="">
+                            -- Seleccionar --
+                        </option>
+                        {assets.map((asset) => (
+                            <option key={asset} value={asset}>
+                                {asset}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
                 <div>
-                    <label htmlFor="operation" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="operation" className="block text-gray-300 font-medium mb-2">
                         Operación:
                     </label>
                     <select
@@ -118,17 +133,19 @@ const Transaction: React.FC = () => {
                         name="operation"
                         value={formData.operation}
                         onChange={handleInputChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         required
                     >
-                        <option disabled selected value=""> -- Seleccionar -- </option>
+                        <option disabled selected value="">
+                            -- Seleccionar --
+                        </option>
                         <option value="BUY">Comprar</option>
                         <option value="SELL">Vender</option>
                     </select>
                 </div>
 
                 <div>
-                    <label htmlFor="amount" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="amount" className="block text-gray-300 font-medium mb-2">
                         Monto:
                     </label>
                     <input
@@ -137,20 +154,19 @@ const Transaction: React.FC = () => {
                         name="amount"
                         value={formData.amount}
                         onChange={handleInputChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         required
                     />
                 </div>
 
                 <button
                     type="submit"
-                    className="py-2 px-4 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600"
+                    className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     Enviar Transacción
                 </button>
             </form>
-        </div>
-    );
+        </div>);
 };
 
 export default Transaction;

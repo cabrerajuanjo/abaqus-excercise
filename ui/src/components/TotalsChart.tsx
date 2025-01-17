@@ -9,7 +9,7 @@ type PortfolioData = {
     total_amount: number;
 };
 
-const TotalsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
+const TotalsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
     const chartRefs = useRef<Record<string, Chart>>({});
     const [data, setData] = useState<PortfolioData[]>([]);
 
@@ -68,7 +68,7 @@ const TotalsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
                 type: "line",
                 data: {
                     labels: [...labels],
-                    datasets: [ datasets ],
+                    datasets: [datasets],
                 },
                 options: {
                     responsive: true,

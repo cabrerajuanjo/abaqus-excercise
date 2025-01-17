@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import Chart, {ChartDataset} from "chart.js/auto";
+import Chart, { ChartDataset } from "chart.js/auto";
 import { ChartProps } from "../types/ChartProps.type";
 
 type PortfolioData = {
@@ -12,7 +12,7 @@ type PortfolioData = {
 
 type AssetColor = Record<string, string>
 
-const WeightsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
+const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
     const chartRefs = useRef<Record<string, Chart>>({});
     const [data, setData] = useState<PortfolioData[]>([]);
 
@@ -62,7 +62,7 @@ const WeightsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
 
             portfolioData.forEach((item) => {
                 if (!datasets[item.asset]) {
-                    assetColor[item.asset] = assetColor[item.asset]?? getRandomColor();
+                    assetColor[item.asset] = assetColor[item.asset] ?? getRandomColor();
 
                     datasets[item.asset] = {
                         label: item.asset,

@@ -62,64 +62,66 @@ const FileUploadForm: React.FC = () => {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-6 space-y-4 w-1/2">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Upload File and Set Initial Amount</h2>
-            <form onSubmit={handleFormSubmit} className="space-y-4">
+        <div className="shadow-md rounded-lg p-8 space-y-6 w-full max-w-md mx-auto bg-gradient-to-br from-blue-900 to-gray-800">
+            <h2 className="text-2xl font-bold text-center">Subir Archivo y Configurar Valor Inicial</h2>
+            <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div>
-                    <label htmlFor="file" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="file" className="block text-gray-300 font-medium mb-2">
                         Tablas de pesos y precios:
                     </label>
                     <input
                         type="file"
                         id="file"
                         onChange={handleFileChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
+
                 <div>
-                    <label htmlFor="initialAmount" className="block text-gray-700 font-medium mb-2">
+                    <label htmlFor="initialAmount" className="block text-gray-300 font-medium mb-2">
                         Valor inicial de portfolios:
                     </label>
                     <input
-                        
                         type="number"
                         id="initialAmount"
                         value={initialAmount}
                         onChange={handleAmountChange}
-                        className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
                 </div>
+
                 <button
                     type="submit"
-                    className="py-2 px-4 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600"
+                    className="w-full py-3 bg-blue-600 font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    Submit
+                    Subir
                 </button>
             </form>
+
             <button
                 onClick={openConfirmationModal}
-                className="py-2 px-4 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600"
+                className="w-full py-3 bg-red-600 font-semibold rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
-                Reset Database
+                Reiniciar Base de Datos
             </button>
 
             {showConfirmation && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white rounded-lg shadow-lg p-6 space-y-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Confirm Reset</h3>
-                        <p className="text-gray-600">Are you sure you want to reset the database? This action cannot be undone.</p>
+                    <div className="bg-white rounded-lg shadow-lg p-6 space-y-4 w-96">
+                        <h3 className="text-lg font-semibold text-gray-800">Confirmar Reinicio</h3>
+                        <p className="text-gray-600">¿Estás seguro de que deseas reiniciar la base de datos? Esta acción no se puede deshacer.</p>
                         <div className="flex justify-end space-x-4">
                             <button
                                 onClick={closeConfirmationModal}
-                                className="py-2 px-4 bg-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-400"
+                                className="py-2 px-4 bg-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-400 focus:outline-none"
                             >
-                                Cancel
+                                Cancelar
                             </button>
                             <button
                                 onClick={handleResetDb}
-                                className="py-2 px-4 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600"
+                                className="py-2 px-4 bg-red-600 font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                             >
-                                Confirm
+                                Confirmar
                             </button>
                         </div>
                     </div>

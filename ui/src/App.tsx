@@ -7,51 +7,55 @@ const PortfolioDashboard: React.FC = () => {
     const [activeTab, setActiveTab] = useState("charts"); // "charts" or "forms"
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8 space-y-8">
-            <h1 className="text-3xl font-bold">Portfolios</h1>
-            <div className="flex space-x-4 mb-6">
+        <div className="min-h-screen bg-gradient-to-b from-gray-900 to-blue-950 p-8 text-[#ddd9ca]">
+            <h1 className="text-4xl font-bold mb-8 text-center">Portfolios</h1>
+            <div className="flex justify-center space-x-4 mb-8">
                 <button
-                    className={`py-2 px-4 rounded-lg font-medium ${activeTab === "charts" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                    className={`py-3 px-6 rounded-lg font-medium ${activeTab === "charts"
+                            ? "bg-blue-600"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                         }`}
                     onClick={() => setActiveTab("charts")}
                 >
-                    Evolución de portfolios
+                    Evolución de Portfolios
                 </button>
                 <button
-                    className={`py-2 px-4 rounded-lg font-medium ${activeTab === "loadReset" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                    className={`py-3 px-6 rounded-lg font-medium ${activeTab === "loadReset"
+                            ? "bg-blue-600"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                         }`}
                     onClick={() => setActiveTab("loadReset")}
                 >
                     Cargar / Resetear DB
                 </button>
                 <button
-                    className={`py-2 px-4 rounded-lg font-medium ${activeTab === "transact" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                    className={`py-3 px-6 rounded-lg font-medium ${activeTab === "transact"
+                            ? "bg-blue-600"
+                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                         }`}
                     onClick={() => setActiveTab("transact")}
                 >
                     Compra / Venta
                 </button>
             </div>
-
-            {activeTab === "charts" && (
-                <div className="gap-8">
-                    <Charts />
-                </div>
-            )}
-
-            {activeTab === "loadReset" && (
-                <div className="gap-8">
-                    <FileUpload />
-                </div>
-            )}
-
-            {activeTab === "transact" && (
-                <div className="gap-8">
-                    <Transact />
-                </div>
-            )}
-        </div>
-    );
+            <div className="p-8 max-w-7xl mx-auto">
+                {activeTab === "charts" && (
+                    <div className="space-y-6">
+                        <Charts />
+                    </div>
+                )}
+                {activeTab === "loadReset" && (
+                    <div className="space-y-6">
+                        <FileUpload />
+                    </div>
+                )}
+                {activeTab === "transact" && (
+                    <div className="space-y-6">
+                        <Transact />
+                    </div>
+                )}
+            </div>
+        </div>);
 };
 
 export default PortfolioDashboard;
