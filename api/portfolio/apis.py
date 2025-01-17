@@ -4,7 +4,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import serializers
 import portfolio.selectors as selectors
-from portfolio.services import extract_transform_load, transact
+from portfolio.services import extract_transform_load, transact, reset
 
 
 class PortfolioWeight(APIView):
@@ -88,3 +88,10 @@ class PortfolioTransact(APIView):
         )
 
         return Response(data)
+
+
+class PortfolioReset(APIView):
+    def post(self, request: Request):
+        reset.execute()
+
+        return Response(status=200)

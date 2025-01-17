@@ -3,7 +3,8 @@ from portfolio.apis import (
     PortfolioTotal,
     PortfolioWeight,
     PortfolioLoadData,
-    PortfolioTransact
+    PortfolioTransact,
+    PortfolioReset
 )
 
 # from . import views
@@ -13,4 +14,5 @@ urlpatterns = [
     path("totals", PortfolioTotal.as_view(), name="portfolio_data"),
     path("load-data", PortfolioLoadData.as_view(), name="load-data"),
     path("transact", PortfolioTransact.as_view(), name="transact-amount"),
+    path("reset", PortfolioReset.as_view(), name="reset"),
 ]

@@ -1,4 +1,3 @@
-import os
 from django.db import transaction
 import pandas
 from portfolio.models import (

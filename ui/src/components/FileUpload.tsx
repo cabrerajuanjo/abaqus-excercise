@@ -20,8 +20,6 @@ const FileUploadForm: React.FC = () => {
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (file && initialAmount !== "") {
-            console.log("File uploaded:", file);
-            console.log("Initial amount:", initialAmount);
             const form = new FormData()
             form.append("file", file)
             form.append("initial_total", initialAmount)
@@ -42,7 +40,16 @@ const FileUploadForm: React.FC = () => {
 
     const handleResetDb = () => {
         console.log("Database reset initiated.");
-        // Add logic to reset the database (e.g., API call)
+        const resetDb = async () => {
+            try {
+                await axios.post(
+                    `http://localhost:8000/portfolio/reset`
+                );
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        resetDb();
         setShowConfirmation(false);
     };
 
