@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const Transaction: React.FC = () => {
     const [formData, setFormData] = useState({
         date: "",
         portfolio: "",
         asset: "",
-        operation: "BUY",
+        operation: "",
         amount: "",
     });
+    const [portfolios, setPortfolios] = useState<string[]>([])
+    const [assets, setAssets] = useState<string[]>([])
+
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+    const fetchData = async () => {
+        try {
+            const assetsP = axios.get<string[]>(
+                `http://localhost:8000/portfolio/assets`
+            );
+            const portfoliosP = axios.get<string[]>(
+                `http://localhost:8000/portfolio/portfolios`
+            );
+            const [assets, portfolios] = await Promise.all([assetsP, portfoliosP]);
+            setAssets(assets.data);
+            setPortfolios(portfolios.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -27,7 +50,7 @@ const Transaction: React.FC = () => {
 
             if (response.ok) {
                 console.log("Transaction submitted successfully");
-                setFormData({ date: "", portfolio: "", asset: "", operation: "BUY", amount: "" });
+                setFormData({ date: "", portfolio: "", asset: "", operation: "", amount: "" });
             } else {
                 console.error("Failed to submit transaction", response.statusText);
             }
@@ -58,30 +81,32 @@ const Transaction: React.FC = () => {
                     <label htmlFor="portfolio" className="block text-gray-700 font-medium mb-2">
                         Portafolio:
                     </label>
-                    <input
-                        type="text"
+                    <select
                         id="portfolio"
                         name="portfolio"
                         value={formData.portfolio}
                         onChange={handleInputChange}
                         className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required
-                    />
+                        required>
+                        <option selected disabled value=""> -- Seleccionar -- </option>
+                        {portfolios.map((portfolio) => <option key={portfolio} value={portfolio}>{portfolio}</option>)}
+                    </select>
                 </div>
 
                 <div>
                     <label htmlFor="asset" className="block text-gray-700 font-medium mb-2">
                         Activo:
                     </label>
-                    <input
-                        type="text"
+                    <select
                         id="asset"
                         name="asset"
                         value={formData.asset}
                         onChange={handleInputChange}
                         className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required
-                    />
+                        required>
+                        <option disabled selected value=""> -- Seleccionar -- </option>
+                        {assets.map((asset) => <option key={asset} value={asset}>{asset}</option>)}
+                    </select>
                 </div>
 
                 <div>
@@ -96,6 +121,7 @@ const Transaction: React.FC = () => {
                         className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                     >
+                        <option disabled selected value=""> -- Seleccionar -- </option>
                         <option value="BUY">Comprar</option>
                         <option value="SELL">Vender</option>
                     </select>

@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TotalsChart from "./TotalsChart";
 import WeightsChart from "./WeightsChart";
 import { DateRange } from "../types/ChartProps.type";
+import axios from "axios";
 
 const PortfolioDashboard: React.FC = () => {
     const [dateRange, setDateRange] = useState<DateRange>({ dateGt: "", dateLt: "" });
     const [fetchTrigger, setFetchTrigger] = useState(false);
     const [activeTab, setActiveTab] = useState("totals"); // "totals" or "weights"
+
+    useEffect(() => {
+        fetchData();
+    }, [])
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get<string[]>(
+                `http://localhost:8000/portfolio/dates`
+            );
+            setDateRange({ dateGt: response.data[0], dateLt: response.data[response.data.length - 1] })
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
