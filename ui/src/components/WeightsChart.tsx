@@ -69,7 +69,7 @@ const WeightsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
                         data: [],
                         fill: true,
                         backgroundColor: assetColor[item.asset],
-                        pointRadius: 1
+                        pointRadius: 0
                     };
                 }
                 datasets[item.asset].data.push(item.weight);

@@ -6,6 +6,7 @@ import { DateRange } from "../types/ChartProps.type";
 const PortfolioDashboard: React.FC = () => {
     const [dateRange, setDateRange] = useState<DateRange>({ dateGt: "", dateLt: "" });
     const [fetchTrigger, setFetchTrigger] = useState(false);
+    const [activeTab, setActiveTab] = useState("totals"); // "totals" or "weights"
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -17,7 +18,7 @@ const PortfolioDashboard: React.FC = () => {
     };
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
+        <div className="p-6 bg-gray-100 min-h-screen w-full">
             <h1 className="text-3xl font-bold mb-6 text-center">Portfolio Dashboard</h1>
             <div className="mb-8 bg-white shadow-md rounded-lg p-6">
                 <form
@@ -55,20 +56,33 @@ const PortfolioDashboard: React.FC = () => {
                     </button>
                 </form>
             </div>
-
-            <div className="row-auto">
-                <div className="mb-8">
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-4">Totals Chart</h2>
+            <div className="mb-8 w-full">
+                <div className="flex space-x-4 mb-6">
+                    <button
+                        className={`py-2 px-4 rounded-lg font-medium ${activeTab === "totals" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                            }`}
+                        onClick={() => setActiveTab("totals")}
+                    >
+                        Totals Chart
+                    </button>
+                    <button
+                        className={`py-2 px-4 rounded-lg font-medium ${activeTab === "weights" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
+                            }`}
+                        onClick={() => setActiveTab("weights")}
+                    >
+                        Weights Chart
+                    </button>
+                </div>
+                {activeTab === "totals" && (
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <TotalsChart dateRange={dateRange} fetchTrigger={fetchTrigger} />
                     </div>
-                </div>
-                <div>
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-4">Weights Chart</h2>
+                )}
+                {activeTab === "weights" && (
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <WeightsChart dateRange={dateRange} fetchTrigger={fetchTrigger} />
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

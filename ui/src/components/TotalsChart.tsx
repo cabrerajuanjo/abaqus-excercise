@@ -56,7 +56,7 @@ const TotalsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
 
             const datasets: ChartDataset = {
                 data: [],
-                backgroundColor: getRandomColor(),
+                backgroundColor: "#EEEEEE",
                 pointRadius: 1
             };
 
@@ -105,16 +105,6 @@ const TotalsChart: React.FC<ChartProps> = ({dateRange, fetchTrigger}) => {
             Object.values(chartRefs.current).forEach((chart) => chart.destroy());
         };
     }, [data]);
-
-    // Utility function to generate random colors
-    const getRandomColor = (): string => {
-        const letters = "0123456789ABCDEF";
-        let color = "#";
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    };
 
     // Group data by portfolio to generate canvas elements
     const portfolios = [...new Set(data.map((item) => item.portfolio))];
