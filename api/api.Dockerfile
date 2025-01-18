@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENV PYTHONUNBUFFERED=1
+# ENV DJANGO_SETTINGS_MODULE = config.django.production
 
 RUN ls
 RUN python manage.py migrate

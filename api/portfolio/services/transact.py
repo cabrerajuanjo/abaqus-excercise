@@ -37,8 +37,11 @@ def execute(date, portfolio, asset, operation, amount_delta) -> None:
         return
 
     new_amount_for_date = amounts[0].amount + amount_delta
-    new_quantity_from_date = new_amount_for_date / prices[0].price
+    # TODO: error if new_amount_for_date < 0 because theres no sufficient amount to sell
+    if new_amount_for_date < 0:
+        new_amount_for_date = 0
 
+    new_quantity_from_date = new_amount_for_date / prices[0].price
     prices_dataframe = pandas.DataFrame(
         prices.values()
     )

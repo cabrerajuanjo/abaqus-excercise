@@ -49,6 +49,7 @@ class PortfolioTotal(APIView):
         return Response(self.OutputSerializer(result, many=True).data)
 
 
+# TODO: return ok message when done and show spinner on front.
 class PortfolioLoadData(APIView):
     parser_classes = (MultiPartParser, FormParser,)
 
