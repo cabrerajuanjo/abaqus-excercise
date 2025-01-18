@@ -16,7 +16,7 @@ const PortfolioDashboard: React.FC = () => {
     const fetchData = async () => {
         try {
             const response = await axios.get<string[]>(
-                `http://localhost:8000/portfolio/dates`
+                `${import.meta.env.VITE_API_URL ?? ""}/portfolio/dates`
             );
             setDateRange({ dateGt: response.data[0], dateLt: response.data[response.data.length - 1] })
         } catch (error) {
@@ -37,7 +37,7 @@ const PortfolioDashboard: React.FC = () => {
 
     return (
         <div className="p-6 from-blue-900 to-gray-900 min-h-screen w-full">
-            <div className="mb-8 bg-gradient-to-br from-blue-800 to-gray-800 shadow-lg rounded-lg p-8 max-w-96     mx-auto">
+            <div className="mb-8 bg-gradient-to-br from-[#0f1d36] to-[#3c4b5e] shadow-lg rounded-lg p-8 max-w-96 mx-auto">
                 <form
                     className="space-y-6"
                     onSubmit={(e) => {

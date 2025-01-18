@@ -19,10 +19,10 @@ const Transaction: React.FC = () => {
     const fetchData = async () => {
         try {
             const assetsP = axios.get<string[]>(
-                `http://localhost:8000/portfolio/assets`
+                `${import.meta.env.VITE_API_URL}/portfolio/assets`
             );
             const portfoliosP = axios.get<string[]>(
-                `http://localhost:8000/portfolio/portfolios`
+                `${import.meta.env.VITE_API_URL}/portfolio/portfolios`
             );
             const [assets, portfolios] = await Promise.all([assetsP, portfoliosP]);
             setAssets(assets.data);
@@ -40,7 +40,7 @@ const Transaction: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8000/portfolio/transact", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/portfolio/transact`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -60,9 +60,9 @@ const Transaction: React.FC = () => {
     };
 
     return (
-        <div className="shadow-md rounded-lg p-8 space-y-3 w-full max-w-md mx-auto bg-gradient-to-br from-blue-900 to-gray-800">
-            <h2 className="text-2xl font-bold text-white text-center">Registrar Transacción</h2>
-            <form onSubmit={handleSubmit} className="space-y-2">
+        <div className="mb-8 bg-gradient-to-br from-[#0f1d36] to-[#3c4b5e] shadow-lg rounded-lg p-8 max-w-96 mx-auto">
+            <h2 className="text-2xl font-bold text-center">Registrar Transacción</h2>
+            <form onSubmit={handleSubmit} className="space-y-1">
                 <div>
                     <label htmlFor="date" className="block text-gray-300 font-medium mb-2">
                         Fecha:
@@ -161,7 +161,7 @@ const Transaction: React.FC = () => {
 
                 <button
                     type="submit"
-                    className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full py-3 bg-blue-600 mt-16 font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     Enviar Transacción
                 </button>

@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./api
+      dockerfile: api.Dockerfile
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - sqlite-data:/app/db.sqlite3
+    depends_on:
+      - frontend
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./ui
+      dockerfile: ui.Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - app-network
+
+volumes:
+  sqlite-data:
+    driver: local
+
+networks:
+  app-network:
+

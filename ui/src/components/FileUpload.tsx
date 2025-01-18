@@ -26,7 +26,7 @@ const FileUploadForm: React.FC = () => {
             const uploadData = async () => {
                 try {
                     await axios.post(
-                        `http://localhost:8000/portfolio/load-data`, form
+                        `${import.meta.env.VITE_API_URL}/portfolio/load-data`, form
                     );
                 } catch (error) {
                     console.error("Error fetching data:", error);
@@ -43,7 +43,7 @@ const FileUploadForm: React.FC = () => {
         const resetDb = async () => {
             try {
                 await axios.post(
-                    `http://localhost:8000/portfolio/reset`
+                    `${import.meta.env.VITE_API_URL}/portfolio/reset`
                 );
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -62,7 +62,7 @@ const FileUploadForm: React.FC = () => {
     };
 
     return (
-        <div className="shadow-md rounded-lg p-8 space-y-6 w-full max-w-md mx-auto bg-gradient-to-br from-blue-900 to-gray-800">
+        <div className="mb-8 bg-gradient-to-br from-[#0f1d36] to-[#3c4b5e] shadow-lg rounded-lg p-8 max-w-96 mx-auto">
             <h2 className="text-2xl font-bold text-center">Subir Archivo y Configurar Valor Inicial</h2>
             <form onSubmit={handleFormSubmit} className="space-y-6">
                 <div>
@@ -100,7 +100,7 @@ const FileUploadForm: React.FC = () => {
 
             <button
                 onClick={openConfirmationModal}
-                className="w-full py-3 bg-red-600 font-semibold rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full py-3 mt-8 bg-red-600 font-semibold rounded-lg shadow-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
                 Reiniciar Base de Datos
             </button>

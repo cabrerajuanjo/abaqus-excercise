@@ -23,7 +23,7 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
         const fetchData = async () => {
             try {
                 const response = await axios.get<PortfolioData[]>(
-                    `http://localhost:8000/portfolio/weights?date__gt=${dateRange.dateGt}&date__lt=${dateRange.dateLt}`
+                    `${import.meta.env.VITE_API_URL}/portfolio/weights?date__gt=${dateRange.dateGt}&date__lt=${dateRange.dateLt}`
                 );
                 setData(response.data);
             } catch (error) {
@@ -37,10 +37,8 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
     useEffect(() => {
         if (data.length === 0) return;
 
-        // Clear any existing charts
         Object.values(chartRefs.current).forEach((chart) => chart.destroy());
 
-        // Group data by portfolio
         const portfolios = data.reduce<Record<string, PortfolioData[]>>((acc, item) => {
             if (!acc[item.portfolio]) acc[item.portfolio] = [];
             acc[item.portfolio].push(item);
@@ -48,19 +46,18 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
         }, {});
 
         const assetColor: AssetColor = {}
-        // Generate charts for each portfolio
         Object.entries(portfolios).forEach(([portfolio, portfolioData]) => {
             const ctx = document.getElementById(`weights-${portfolio}`) as HTMLCanvasElement;
             if (!ctx) return;
 
             const labels = new Set<string>()
-            portfolioData.forEach((item) => {
+            for(const item of portfolioData) {
                 labels.add(item.date)
-            });
+            }
 
             const datasets: Record<string, ChartDataset> = {};
 
-            portfolioData.forEach((item) => {
+            for(const item of portfolioData) {
                 if (!datasets[item.asset]) {
                     assetColor[item.asset] = assetColor[item.asset] ?? getRandomColor();
 
@@ -73,7 +70,7 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
                     };
                 }
                 datasets[item.asset].data.push(item.weight);
-            });
+            }
 
             chartRefs.current[portfolio] = new Chart(ctx, {
                 type: "line",
@@ -82,8 +79,13 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
                     datasets: Object.values(datasets),
                 },
                 options: {
+                    animation: false,
                     responsive: true,
                     plugins: {
+                        decimation: {
+                            enabled: true,
+                            algorithm: 'lttb'
+                        },
                         legend: {
                             position: "top",
                         },
@@ -105,6 +107,8 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
                                 display: true,
                                 text: "Weight",
                             },
+                            min: 0,
+                            max: 1
                         },
                     },
                 },
@@ -112,22 +116,20 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
         });
 
         return () => {
-            // Destroy charts on cleanup
             Object.values(chartRefs.current).forEach((chart) => chart.destroy());
         };
     }, [data]);
 
-    // Utility function to generate random colors
     const getRandomColor = (): string => {
         const letters = "0123456789ABCDEF";
         let color = "#";
         for (let i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
+        color += "AA"
         return color;
     };
 
-    // Group data by portfolio to generate canvas elements
     const portfolios = [...new Set(data.map((item) => item.portfolio))];
 
     return (

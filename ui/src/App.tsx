@@ -38,19 +38,19 @@ const PortfolioDashboard: React.FC = () => {
                     Compra / Venta
                 </button>
             </div>
-            <div className="p-8 max-w-7xl mx-auto">
+            <div className="p-2 max-w-7xl mx-auto">
                 {activeTab === "charts" && (
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <Charts />
                     </div>
                 )}
                 {activeTab === "loadReset" && (
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <FileUpload />
                     </div>
                 )}
                 {activeTab === "transact" && (
-                    <div className="space-y-6">
+                    <div className="space-y-2">
                         <Transact />
                     </div>
                 )}

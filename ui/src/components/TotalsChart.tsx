@@ -20,7 +20,7 @@ const TotalsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
         const fetchData = async () => {
             try {
                 const response = await axios.get<PortfolioData[]>(
-                    `http://localhost:8000/portfolio/totals?date__gt=${dateRange.dateGt}&date__lt=${dateRange.dateLt}`
+                    `${import.meta.env.VITE_API_URL}/portfolio/totals?date__gt=${dateRange.dateGt}&date__lt=${dateRange.dateLt}`
                 );
                 setData(response.data);
             } catch (error) {
@@ -71,6 +71,7 @@ const TotalsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
                     datasets: [datasets],
                 },
                 options: {
+                    borderColor: "#00228A88",
                     responsive: true,
                     plugins: {
                         legend: {
