@@ -273,5 +273,3 @@ def execute(file, initial_total):
         price_entities,
         amount_entities,
     )
-
-    return assets

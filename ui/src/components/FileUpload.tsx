@@ -1,10 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
+import Spinner from "./Spinner";
+import { FormResultDetail, FormResultDetailProps } from "./FormErrorDetail";
 
 const FileUploadForm: React.FC = () => {
+    const [resultMessage, setResultMessage] = useState<FormResultDetailProps>({ message: null, messageType: 'success' });
     const [file, setFile] = useState<File | null>(null);
     const [initialAmount, setInitialAmount] = useState<string | "">("");
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showSpinner, setShowSpinner] = useState(false);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -24,13 +28,17 @@ const FileUploadForm: React.FC = () => {
             form.append("file", file)
             form.append("initial_total", initialAmount)
             const uploadData = async () => {
+                setShowSpinner(true)
                 try {
                     await axios.post(
                         `${import.meta.env.VITE_API_URL}/portfolio/load-data`, form
                     );
+                    setResultMessage({message: "Datos cargados correctamente", messageType: "success"})
                 } catch (error) {
+                    setResultMessage({message: "Error al cargar data. Assegúrese de haber reiniciado la base de datos y que la hoja de datos sea válida", messageType: "error"})
                     console.error("Error fetching data:", error);
                 }
+                setShowSpinner(false)
             }
             uploadData();
         } else {
@@ -45,7 +53,9 @@ const FileUploadForm: React.FC = () => {
                 await axios.post(
                     `${import.meta.env.VITE_API_URL}/portfolio/reset`
                 );
+                setResultMessage({message: "Base de datos reiniciada correctamente", messageType: "success"})
             } catch (error) {
+                setResultMessage({message: "Hubo un problema al reiniciar la base de datos", messageType: "error"})
                 console.error("Error fetching data:", error);
             }
         }
@@ -94,7 +104,8 @@ const FileUploadForm: React.FC = () => {
                     type="submit"
                     className="w-full py-3 bg-blue-600 font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    Subir
+                    {!showSpinner && (<span>Subir</span>)}
+                    {showSpinner && (<Spinner />)}
                 </button>
             </form>
 
@@ -127,6 +138,7 @@ const FileUploadForm: React.FC = () => {
                     </div>
                 </div>
             )}
+            <FormResultDetail message={resultMessage.message} messageType={ resultMessage.messageType } />
         </div>
     );
 };

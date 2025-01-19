@@ -63,10 +63,10 @@ class PortfolioLoadData(APIView):
 
         my_file = request.FILES['file']
 
-        data = extract_transform_load.execute(
+        extract_transform_load.execute(
             my_file, serializer.validated_data['initial_total']
         )
-        return Response(data)
+        return Response(status=200)
 
 
 class PortfolioTransact(APIView):
