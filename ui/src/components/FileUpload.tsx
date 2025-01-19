@@ -33,9 +33,9 @@ const FileUploadForm: React.FC = () => {
                     await axios.post(
                         `${import.meta.env.VITE_API_URL}/portfolio/load-data`, form
                     );
-                    setResultMessage({message: "Datos cargados correctamente", messageType: "success"})
+                    setResultMessage({ message: "Datos cargados correctamente", messageType: "success" })
                 } catch (error) {
-                    setResultMessage({message: "Error al cargar data. Assegúrese de haber reiniciado la base de datos y que la hoja de datos sea válida", messageType: "error"})
+                    setResultMessage({ message: "Error al cargar data. Assegúrese de haber reiniciado la base de datos y que la hoja de datos sea válida", messageType: "error" })
                     console.error("Error fetching data:", error);
                 }
                 setShowSpinner(false)
@@ -53,9 +53,9 @@ const FileUploadForm: React.FC = () => {
                 await axios.post(
                     `${import.meta.env.VITE_API_URL}/portfolio/reset`
                 );
-                setResultMessage({message: "Base de datos reiniciada correctamente", messageType: "success"})
+                setResultMessage({ message: "Base de datos reiniciada correctamente", messageType: "success" })
             } catch (error) {
-                setResultMessage({message: "Hubo un problema al reiniciar la base de datos", messageType: "error"})
+                setResultMessage({ message: "Hubo un problema al reiniciar la base de datos", messageType: "error" })
                 console.error("Error fetching data:", error);
             }
         }
@@ -82,6 +82,7 @@ const FileUploadForm: React.FC = () => {
                     <input
                         type="file"
                         id="file"
+                        required
                         onChange={handleFileChange}
                         className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                     />
@@ -94,6 +95,7 @@ const FileUploadForm: React.FC = () => {
                     <input
                         type="number"
                         id="initialAmount"
+                        required
                         value={initialAmount}
                         onChange={handleAmountChange}
                         className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
@@ -138,7 +140,7 @@ const FileUploadForm: React.FC = () => {
                     </div>
                 </div>
             )}
-            <FormResultDetail message={resultMessage.message} messageType={ resultMessage.messageType } />
+            <FormResultDetail message={resultMessage.message} messageType={resultMessage.messageType} />
         </div>
     );
 };

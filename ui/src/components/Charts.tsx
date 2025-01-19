@@ -75,8 +75,8 @@ const PortfolioDashboard: React.FC = () => {
                 <div className="flex space-x-4 mb-6">
                     <button
                         className={`w-1/2 py-3 rounded-lg font-medium text-sm ${activeTab === "totals"
-                                ? "bg-blue-600"
-                                : "bg-gray-200 text-gray-700"
+                            ? "bg-blue-600"
+                            : "bg-gray-200 text-gray-700"
                             }`}
                         onClick={() => setActiveTab("totals")}
                     >
@@ -84,8 +84,8 @@ const PortfolioDashboard: React.FC = () => {
                     </button>
                     <button
                         className={`w-1/2 py-3 rounded-lg font-medium text-sm ${activeTab === "weights"
-                                ? "bg-blue-600"
-                                : "bg-gray-200 text-gray-700"
+                            ? "bg-blue-600"
+                            : "bg-gray-200 text-gray-700"
                             }`}
                         onClick={() => setActiveTab("weights")}
                     >

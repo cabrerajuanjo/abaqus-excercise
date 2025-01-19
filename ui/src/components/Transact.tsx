@@ -61,9 +61,10 @@ const Transaction: React.FC = () => {
         } catch (error) {
             if (error instanceof AxiosError && error.response) {
                 if (error.response.data.extra.code === "INSUFFICIENT_ASSETS") {
-                    setResultMessage({ 
+                    setResultMessage({
                         message: `Insuficiente. Monto de ${formData.asset} en ${formData.portfolio} en ${formData.date} es ${error.response.data.extra.currentAssets}`,
-                        messageType: "error" });
+                        messageType: "error"
+                    });
                 }
                 if (error.response.data.extra.code === "ASSET_NOT_FOUND") {
                     setResultMessage({
@@ -184,7 +185,7 @@ const Transaction: React.FC = () => {
                     Enviar Transacción
                 </button>
             </form>
-            <FormResultDetail message={resultMessage.message} messageType={ resultMessage.messageType } />
+            <FormResultDetail message={resultMessage.message} messageType={resultMessage.messageType} />
         </div>);
 };
 

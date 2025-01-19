@@ -12,8 +12,8 @@ const PortfolioDashboard: React.FC = () => {
             <div className="flex justify-center space-x-4 mb-8">
                 <button
                     className={`py-3 px-6 rounded-lg font-medium ${activeTab === "charts"
-                            ? "bg-blue-600"
-                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                        ? "bg-blue-600"
+                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                         }`}
                     onClick={() => setActiveTab("charts")}
                 >
@@ -21,8 +21,8 @@ const PortfolioDashboard: React.FC = () => {
                 </button>
                 <button
                     className={`py-3 px-6 rounded-lg font-medium ${activeTab === "loadReset"
-                            ? "bg-blue-600"
-                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                        ? "bg-blue-600"
+                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                         }`}
                     onClick={() => setActiveTab("loadReset")}
                 >
@@ -30,8 +30,8 @@ const PortfolioDashboard: React.FC = () => {
                 </button>
                 <button
                     className={`py-3 px-6 rounded-lg font-medium ${activeTab === "transact"
-                            ? "bg-blue-600"
-                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                        ? "bg-blue-600"
+                        : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                         }`}
                     onClick={() => setActiveTab("transact")}
                 >

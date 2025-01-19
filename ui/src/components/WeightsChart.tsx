@@ -51,13 +51,13 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
             if (!ctx) return;
 
             const labels = new Set<string>()
-            for(const item of portfolioData) {
+            for (const item of portfolioData) {
                 labels.add(item.date)
             }
 
             const datasets: Record<string, ChartDataset> = {};
 
-            for(const item of portfolioData) {
+            for (const item of portfolioData) {
                 if (!datasets[item.asset]) {
                     assetColor[item.asset] = assetColor[item.asset] ?? getRandomColor();
 
