@@ -18,12 +18,12 @@ const WeightsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
 
 
     useEffect(() => {
-        if (!dateRange.dateGt || !dateRange.dateLt) return;
+        if (!dateRange.dateMin || !dateRange.dateMax) return;
 
         const fetchData = async () => {
             try {
                 const response = await axios.get<PortfolioData[]>(
-                    `${import.meta.env.VITE_API_URL}/portfolio/weights?date__gt=${dateRange.dateGt}&date__lt=${dateRange.dateLt}`
+                    `${import.meta.env.VITE_API_URL}/portfolio/weights?date__gt=${dateRange.dateMin}&date__lt=${dateRange.dateMax}`
                 );
                 setData(response.data);
             } catch (error) {

@@ -42,8 +42,7 @@ class GetWeightsTest(TestCase):
         ]
 
     def test_get_weights_api(self):
-        # Define API endpoint and filters
-        url = '/portfolio/weights'  # Replace with the actual endpoint
+        url = '/portfolio/weights'
         filters = {
             "date__gt": "2023-01-01",
             "date__lt": "2023-01-03",

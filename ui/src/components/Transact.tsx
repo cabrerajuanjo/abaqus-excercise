@@ -1,7 +1,11 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
+import { DateRange } from "../types/ChartProps.type";
+import { FormResultDetail, type FormResultDetailProps } from "./FormErrorDetail";
 
 const Transaction: React.FC = () => {
+    // const [errorMessage, setErrorMessage] = useState<FormResultDetailProps>({message: null, messageType: 'success'});
+    const [resultMessage, setResultMessage] = useState<FormResultDetailProps>({ message: null, messageType: 'success' });
     const [formData, setFormData] = useState({
         date: "",
         portfolio: "",
@@ -11,6 +15,7 @@ const Transaction: React.FC = () => {
     });
     const [portfolios, setPortfolios] = useState<string[]>([])
     const [assets, setAssets] = useState<string[]>([])
+    const [dateRange, setDateRange] = useState<DateRange>({ dateMin: "", dateMax: "" });
 
     useEffect(() => {
         fetchData();
@@ -24,9 +29,14 @@ const Transaction: React.FC = () => {
             const portfoliosP = axios.get<string[]>(
                 `${import.meta.env.VITE_API_URL}/portfolio/portfolios`
             );
-            const [assets, portfolios] = await Promise.all([assetsP, portfoliosP]);
+            const datesP = axios.get<string[]>(
+                `${import.meta.env.VITE_API_URL}/portfolio/dates`
+            );
+            const [assets, portfolios, dates] = await Promise.all([assetsP, portfoliosP, datesP]);
             setAssets(assets.data);
             setPortfolios(portfolios.data);
+            setDateRange({ dateMin: dates.data[0], dateMax: dates.data[dates.data.length - 1] })
+            setFormData({ ...formData, date: dateRange.dateMin })
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -40,21 +50,27 @@ const Transaction: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/portfolio/transact`, {
-                method: "POST",
+            await axios.post(`${import.meta.env.VITE_API_URL}/portfolio/transact`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData),
             });
 
-            if (response.ok) {
-                console.log("Transaction submitted successfully");
-                setFormData({ date: "", portfolio: "", asset: "", operation: "", amount: "" });
-            } else {
-                console.error("Failed to submit transaction", response.statusText);
-            }
+            console.log("Transaction submitted successfully");
+            setResultMessage({ message: "Transacción realizada correctamente", messageType: "success" })
         } catch (error) {
+            if (error instanceof AxiosError && error.response) {
+                if (error.response.data.extra.code === "INSUFFICIENT_ASSETS") {
+                    setResultMessage({ 
+                        message: `Insuficiente. Monto de ${formData.asset} en ${formData.portfolio} en ${formData.date} es ${error.response.data.extra.currentAssets}`,
+                        messageType: "error" });
+                }
+                if (error.response.data.extra.code === "ASSET_NOT_FOUND") {
+                    setResultMessage({
+                        message: `Activo ${formData.asset} en ${formData.portfolio} en ${formData.date} no fue encontrado en la base de datos`, messageType: "error"
+                    });
+                }
+            }
             console.error("Error submitting transaction:", error);
         }
     };
@@ -71,6 +87,8 @@ const Transaction: React.FC = () => {
                         type="date"
                         id="date"
                         name="date"
+                        min={dateRange.dateMin}
+                        max={dateRange.dateMax}
                         value={formData.date}
                         onChange={handleInputChange}
                         className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
@@ -166,6 +184,7 @@ const Transaction: React.FC = () => {
                     Enviar Transacción
                 </button>
             </form>
+            <FormResultDetail message={resultMessage.message} messageType={ resultMessage.messageType } />
         </div>);
 };
 

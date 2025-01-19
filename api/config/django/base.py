@@ -80,7 +80,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+  
+REST_FRAMEWORK = {
+    # "EXCEPTION_HANDLER": "styleguide_example.api.exception_handlers.drf_default_with_modifications_exception_handler",
+    'EXCEPTION_HANDLER': 'api.exeption_handlers.hacksoft_proposed_exception_handler',
+    "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    "DEFAULT_AUTHENTICATION_CLASSES": [],
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

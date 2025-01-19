@@ -77,5 +77,6 @@ def portfolios():
 def assets():
     return Asset.objects.all()
 
+
 def dates():
     return Date.objects.all()

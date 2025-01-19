@@ -1,6 +1,6 @@
 export type DateRange = {
-    dateGt: string,
-    dateLt: string,
+    dateMin: string,
+    dateMax: string,
 }
 
 export type ChartProps = {

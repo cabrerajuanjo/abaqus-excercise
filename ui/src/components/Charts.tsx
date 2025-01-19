@@ -5,7 +5,7 @@ import { DateRange } from "../types/ChartProps.type";
 import axios from "axios";
 
 const PortfolioDashboard: React.FC = () => {
-    const [dateRange, setDateRange] = useState<DateRange>({ dateGt: "", dateLt: "" });
+    const [dateRange, setDateRange] = useState<DateRange>({ dateMin: "", dateMax: "" });
     const [fetchTrigger, setFetchTrigger] = useState(false);
     const [activeTab, setActiveTab] = useState("totals"); // "totals" or "weights"
 
@@ -18,13 +18,11 @@ const PortfolioDashboard: React.FC = () => {
             const response = await axios.get<string[]>(
                 `${import.meta.env.VITE_API_URL ?? ""}/portfolio/dates`
             );
-            setDateRange({ dateGt: response.data[0], dateLt: response.data[response.data.length - 1] })
+            setDateRange({ dateMin: response.data[0], dateMax: response.data[response.data.length - 1] })
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     };
-
-
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -46,27 +44,27 @@ const PortfolioDashboard: React.FC = () => {
                     }}
                 >
                     <div>
-                        <label className="block text-gray-300 font-medium mb-2" htmlFor="dateGt">
+                        <label className="block text-gray-300 font-medium mb-2" htmlFor="dateMin">
                             Fecha de Inicio:
                         </label>
                         <input
-                            id="dateGt"
-                            name="dateGt"
+                            id="dateMin"
+                            name="dateMin"
                             type="date"
-                            value={dateRange.dateGt}
+                            value={dateRange.dateMin}
                             onChange={handleDateChange}
                             className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-300 font-medium mb-2" htmlFor="dateLt">
+                        <label className="block text-gray-300 font-medium mb-2" htmlFor="dateMax">
                             Fecha de Fin:
                         </label>
                         <input
-                            id="dateLt"
-                            name="dateLt"
+                            id="dateMax"
+                            name="dateMax"
                             type="date"
-                            value={dateRange.dateLt}
+                            value={dateRange.dateMax}
                             onChange={handleDateChange}
                             className="block w-full p-1 text-gray-900 bg-gray-100 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                         />

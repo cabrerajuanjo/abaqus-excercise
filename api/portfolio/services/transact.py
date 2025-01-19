@@ -2,9 +2,11 @@ import pandas
 from django.db import transaction
 from django.core import exceptions
 from django.db.models import Prefetch
+
 from portfolio.models import (
     Amount, Price
 )
+from core.exceptions import ApplicationError
 
 # TODO: put this constant in a common place
 SELL_CHOICE = "SELL"
@@ -34,12 +36,22 @@ def execute(date, portfolio, asset, operation, amount_delta) -> None:
     ).order_by("date__date")
 
     if not len(amounts) or not len(prices):
-        return
+        raise ApplicationError(
+            message="Asset not found",
+            extra={
+               "code": "ASSET_NOT_FOUND",
+            }
+        )
 
     new_amount_for_date = amounts[0].amount + amount_delta
-    # TODO: error if new_amount_for_date < 0 because theres no sufficient amount to sell
     if new_amount_for_date < 0:
-        new_amount_for_date = 0
+        raise ApplicationError(
+            message="Cannot sell more than currently has",
+            extra={
+               "code": "INSUFFICIENT_ASSETS",
+               "currentAssets": amounts[0].amount
+            }
+        )
 
     new_quantity_from_date = new_amount_for_date / prices[0].price
     prices_dataframe = pandas.DataFrame(
