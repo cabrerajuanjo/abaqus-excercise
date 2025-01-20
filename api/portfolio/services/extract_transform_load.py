@@ -58,7 +58,7 @@ def get_dates(
     portfolio_prices_sheet: pandas.DataFrame,
 ) -> list[str]:
     dates: list[str] = []
-    for datetime in portfolio_prices_sheet[SPREAD_SHEET_DATE_PRICE_COLUMN]:
+    for datetime in portfolio_prices_sheet[SPREAD_SHEET_DATE_PRICE_COLUMN].sort_values():
         dates.append(pandas.to_datetime(datetime).date())
 
     return dates
@@ -115,7 +115,9 @@ def get_normalized_prices(
         value_vars=list(assets),
         var_name=ASSET_COLUMN_NAME,
         value_name=PRICE_COLUMN_NAME
-    ).rename(columns={SPREAD_SHEET_DATE_PRICE_COLUMN: DATE_COLUMN_NAME})
+    ).rename(
+        columns={SPREAD_SHEET_DATE_PRICE_COLUMN: DATE_COLUMN_NAME}
+    ).sort_values(DATE_COLUMN_NAME)
 
     return normalized_prices
 

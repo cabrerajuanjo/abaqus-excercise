@@ -8,8 +8,8 @@ services:
       dockerfile: api.Dockerfile
     ports:
       - "8000:8000"
-    # volumes:
-    #   - sqlite-data:/app/db.sqlite3
+    volumes:
+      - sqlite-data:/app/db
     depends_on:
       - frontend
     networks:

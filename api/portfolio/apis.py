@@ -49,7 +49,6 @@ class PortfolioTotal(APIView):
         return Response(self.OutputSerializer(result, many=True).data)
 
 
-# TODO: return ok message when done and show spinner on front.
 class PortfolioLoadData(APIView):
     parser_classes = (MultiPartParser, FormParser,)
 
@@ -81,15 +80,14 @@ class PortfolioTransact(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        data = transact.execute(
+        transact.execute(
             date=serializer.validated_data['date'],
             portfolio=serializer.validated_data['portfolio'],
             asset=serializer.validated_data['asset'],
             operation=serializer.validated_data['operation'],
             amount_delta=serializer.validated_data['amount']
         )
-
-        return Response(data)
+        return Response(status=200)
 
 
 class PortfolioReset(APIView):
@@ -128,6 +126,7 @@ class PortfolioAssets(APIView):
         result = selectors.assets()
 
         return Response(self.OutputSerializer(result, many=True).data)
+
 
 class PortfolioDates(APIView):
     class OutputSerializer(serializers.ModelSerializer):

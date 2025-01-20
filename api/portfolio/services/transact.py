@@ -8,7 +8,6 @@ from portfolio.models import (
 )
 from core.exceptions import ApplicationError
 
-# TODO: put this constant in a common place
 SELL_CHOICE = "SELL"
 
 
