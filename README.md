@@ -23,10 +23,10 @@ Three main components
 - Helpers selectors to improve user experience
 - Integration tests for the most common flows
 
-## API Endpoints
+## Endpoints
 
 ### 1. Portfolio Weights
-- **Endpoint**: `/api/portfolio/weights`
+- **Endpoint**: `/portfolio/weights`
 - **Method**: GET
 - **Query Parameters**:
   - `date__lt` (optional): Filter weights before a specific date.
@@ -44,7 +44,7 @@ Three main components
   ```
 
 ### 2. Portfolio Totals
-- **Endpoint**: `/api/portfolio/totals`
+- **Endpoint**: `/portfolio/totals`
 - **Method**: GET
 - **Query Parameters**:
   - `date__lt` (optional): Filter totals before a specific date.
@@ -61,7 +61,7 @@ Three main components
   ```
 
 ### 3. Load Portfolio Data
-- **Endpoint**: `/api/portfolio/load`
+- **Endpoint**: `/portfolio/load-data`
 - **Method**: POST
 - **Body**:
   ```json
@@ -73,7 +73,7 @@ Three main components
 - **Response**: HTTP 200 OK
 
 ### 4. Perform Transactions
-- **Endpoint**: `/api/portfolio/transact`
+- **Endpoint**: `/portfolio/transact`
 - **Method**: POST
 - **Body**:
   ```json
@@ -93,12 +93,12 @@ Three main components
   ```
 
 ### 5. Reset Portfolio Data
-- **Endpoint**: `/api/portfolio/reset`
+- **Endpoint**: `/portfolio/reset`
 - **Method**: POST
 - **Response**: HTTP 200 OK
 
 ### 6. List Portfolios
-- **Endpoint**: `/api/portfolio/portfolios`
+- **Endpoint**: `/portfolio/portfolios`
 - **Method**: GET
 - **Response**:
   ```json
@@ -106,7 +106,7 @@ Three main components
   ```
 
 ### 7. List Assets
-- **Endpoint**: `/api/portfolio/assets`
+- **Endpoint**: `/portfolio/assets`
 - **Method**: GET
 - **Response**:
   ```json
@@ -114,7 +114,7 @@ Three main components
   ```
 
 ### 8. List Dates
-- **Endpoint**: `/api/portfolio/dates`
+- **Endpoint**: `/portfolio/dates`
 - **Method**: GET
 - **Response**:
   ```json
