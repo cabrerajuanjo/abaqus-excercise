@@ -57,5 +57,28 @@ class GetWeightsTest(TestCase):
         response = self.client.get(url, data=filters)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 8)
-        self.assertDictEqual(response.data[2], expected_third_weight)
+        self.assertEqual(len(response.data["results"]), 8)
+        self.assertDictEqual(
+            response.data["results"][2], expected_third_weight)
+
+    def test_get_weights_api_paginated(self):
+        url = '/portfolio/weights?page=1&takeDates=1'
+        filters = {
+            "page": 1,
+            "takeDates": 1,
+            "date__gt": "2023-01-01",
+            "date__lt": "2023-01-03",
+        }
+        expected_third_weight = {
+            "date": "2023-01-01",
+            "asset": "Activo 1",
+            "portfolio": "portafolio 2",
+            "weight": 0.42857142857142855
+        }
+
+        response = self.client.get(url, data=filters)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data["results"]), 4)
+        self.assertDictEqual(
+            response.data["results"][2], expected_third_weight)

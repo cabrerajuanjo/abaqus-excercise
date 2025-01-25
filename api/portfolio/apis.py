@@ -1,8 +1,11 @@
-from rest_framework.response import Response
+from rest_framework.response import Response  # type: ignore
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework import serializers
+from datetime import datetime, date
+
+from api.date_based_pagination import DateBasedPagination
 from portfolio.models import Asset, Portfolio, Date
 import portfolio.selectors as selectors
 from portfolio.services import extract_transform_load, transact, reset
@@ -10,10 +13,12 @@ from portfolio.services import extract_transform_load, transact, reset
 
 class PortfolioWeight(APIView):
     class InputSerializer(serializers.Serializer):
-        page = serializers.IntegerField(required=False)
-        perPage = serializers.IntegerField(required=False)
-        date__lt = serializers.DateField(required=False)
-        date__gt = serializers.DateField(required=False)
+        page = serializers.IntegerField(
+            required=False, min_value=1, default=None)
+        takeDates = serializers.IntegerField(
+            required=False, min_value=1, default=None)
+        date__lt = serializers.DateField(required=False, default=None)
+        date__gt = serializers.DateField(required=False, default=None)
 
     class OutputSerializer(serializers.Serializer):
         date = serializers.DateField()
@@ -25,15 +30,39 @@ class PortfolioWeight(APIView):
         serializer = self.InputSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        result = selectors.getWeights(filters=serializer.validated_data)
+        page = serializer.validated_data['page']
+        takeDates = serializer.validated_data['takeDates']
+        date__lt = serializer.validated_data['date__lt']
+        date__gt = serializer.validated_data['date__gt']
 
-        return Response(self.OutputSerializer(result, many=True).data)
+        date_based_paginator = DateBasedPagination(
+            page=page,
+            takeDates=takeDates,
+            date__lt=date__lt,
+            date__gt=date__gt
+        )
+
+        min, max = date_based_paginator.get_date_limits()
+
+        paginated_filter = {'date__gt': str(min), 'date__lt': str(max)}
+
+        result = selectors.getWeights(filters=paginated_filter)
+
+        return Response(
+            date_based_paginator.add_paginated_data(
+                self.OutputSerializer(result, many=True).data
+            )
+        )
 
 
 class PortfolioTotal(APIView):
     class InputSerializer(serializers.Serializer):
-        date__lt = serializers.DateField(required=False)
-        date__gt = serializers.DateField(required=False)
+        page = serializers.IntegerField(
+            required=False, min_value=1, default=None)
+        takeDates = serializers.IntegerField(
+            required=False, min_value=1, default=None)
+        date__lt = serializers.DateField(required=False, default=None)
+        date__gt = serializers.DateField(required=False, default=None)
 
     class OutputSerializer(serializers.Serializer):
         date = serializers.DateField()
@@ -44,9 +73,29 @@ class PortfolioTotal(APIView):
         serializer = self.InputSerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
 
-        result = selectors.getTotals(filters=serializer.validated_data)
+        page = serializer.validated_data['page']
+        takeDates = serializer.validated_data['takeDates']
+        date__lt = serializer.validated_data['date__lt']
+        date__gt = serializer.validated_data['date__gt']
 
-        return Response(self.OutputSerializer(result, many=True).data)
+        date_based_paginator = DateBasedPagination(
+            page=page,
+            takeDates=takeDates,
+            date__lt=date__lt,
+            date__gt=date__gt
+        )
+
+        min, max = date_based_paginator.get_date_limits()
+
+        paginated_filter = {'date__gt': str(min), 'date__lt': str(max)}
+
+        result = selectors.getTotals(filters=paginated_filter)
+
+        return Response(
+            date_based_paginator.add_paginated_data(
+                self.OutputSerializer(result, many=True).data
+            )
+        )
 
 
 class PortfolioLoadData(APIView):
@@ -108,7 +157,6 @@ class PortfolioPortfolios(APIView):
 
     def get(self, request: Request):
         result = selectors.portfolios()
-        print(result)
 
         return Response(self.OutputSerializer(result, many=True).data)
 

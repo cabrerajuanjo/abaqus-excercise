@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import Chart, { ChartDataset } from "chart.js/auto";
 import { ChartProps } from "../types/ChartProps.type";
+import { dateBasedPaginatedFetch } from "../utils/date-based-paginated-fetcher";
 
 type PortfolioData = {
     date: string;
@@ -19,10 +19,9 @@ const TotalsChart: React.FC<ChartProps> = ({ dateRange, fetchTrigger }) => {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get<PortfolioData[]>(
-                    `${import.meta.env.VITE_API_URL}/portfolio/totals?date__gt=${dateRange.dateMin}&date__lt=${dateRange.dateMax}`
-                );
-                setData(response.data);
+                const takeDate = 50;
+                    const data = await dateBasedPaginatedFetch<PortfolioData>(dateRange, takeDate, 'portfolio/totals')
+                setData(data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

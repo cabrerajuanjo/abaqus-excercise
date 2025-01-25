@@ -29,6 +29,8 @@ Three main components
 - **Endpoint**: `/portfolio/weights`
 - **Method**: GET
 - **Query Parameters**:
+  - `page` (optional): page number for pagination, default is 1
+  - `takeDates` (optional): offset of dates to take per page, default is 30
   - `date__lt` (optional): Filter weights before a specific date.
   - `date__gt` (optional): Filter weights after a specific date.
 - **Response**: 
@@ -47,6 +49,8 @@ Three main components
 - **Endpoint**: `/portfolio/totals`
 - **Method**: GET
 - **Query Parameters**:
+  - `page` (optional): page number for pagination, default is 1
+  - `takeDates` (optional): offset of dates to take per page, default is 30
   - `date__lt` (optional): Filter totals before a specific date.
   - `date__gt` (optional): Filter totals after a specific date.
 - **Response**:

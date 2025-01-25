@@ -41,7 +41,7 @@ class GetTotalsTest(TestCase):
             ),
         ]
 
-    def test_get_weights_api(self):
+    def test_get_totals_api(self):
         url = '/portfolio/totals'
         filters = {
             "date__gt": "2023-01-01",
@@ -56,5 +56,5 @@ class GetTotalsTest(TestCase):
         response = self.client.get(url, data=filters)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 4)
-        self.assertDictEqual(response.data[1], expected_second_weight)
+        self.assertEqual(len(response.data["results"]), 4)
+        self.assertDictEqual(response.data["results"][1], expected_second_weight)
